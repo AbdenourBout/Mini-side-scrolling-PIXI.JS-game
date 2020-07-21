@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+    <script src="js/pixi.min.js"></script>
+    <script>
+        let app;
+        let bgBack;
+        let bgFront;
+        let bgMiddle;
+
+
+        let keys = {};
+        let keysDiv;
+        let bullets = [];
+        let bulletSpeed = 10;
+        let player;
+        let enemy;
+        let enemySpeed = 2;
+
+        let bgX = 0;
+        let bgSpeed = 1;
+
+        window.onload = function () {
+            app = new PIXI.Application({
+                width: 800,
+                height: 600,
+                backgroundColor: 0x000000
+            });
+            document.querySelector("#gameDiv").appendChild(app.view);
+
+            app.stage.interactive = true;
+            document.querySelector("#gameDiv ").addEventListener("pointerdown", fireBullet);
+
+
+            window.addEventListener("keydown", keysDown);
+            window.addEventListener("keyup", keysUp);
+
+
+            app.loader.baseUrl = "img";
+            app.loader
+                .add("bgBack", "back.png")
+                .add("bgMiddle", "middle.png")
+                .add("bgFront", "front.png")
+                .add("player", "player.png")
+                .add("enemy", "enemy.png")
+                .add("bullet", "bullet.png");
+
+
+            app.loader.onComplete.add(initLevel);
+            app.loader.load();
+
+
+            // app.ticker.app(gameLoop);
+
+        }
+
+        function initLevel() {
+
+            bgBack = createBg(app.loader.resources["bgBack"].texture);
+            bgMiddle = createBg(app.loader.resources["bgMiddle"].texture);
+            bgFront = createBg(app.loader.resources["bgFront"].texture);
+            player = createPlayer(app.loader.resources["player"].texture);
+            enemy = createEnemy(app.loader.resources["enemy"].texture);
+
+            app.ticker.add(gameLoop);
+        }
+
+        function keysDown(e) {
+            console.log(e.keyCode);
+            keys[e.keyCode] = true;
+        }
+
+        function keysUp(e) {
+            keys[e.keyCode] = false;
+        }
+
+
+        function createBg(texture) {
+            let tiling = new PIXI.TilingSprite(texture ,800,600);
+            tiling.position.set(0, 0);
+            app.stage.addChild(tiling);
+
+            return tiling;
+        }
+
+        function createPlayer(texture) {
+            console.log("player");
+
+            let player = new PIXI.Sprite(texture);
+            console.log("player" + player);
+            player.anchor.set(0.5);
+            player.x = 80;
+            player.y = app.view.height / 2;
+            console.log("player" + player.x);
+
+            app.stage.addChild(player);
+            return player;
+
+        }
+
+        function createEnemy(texture) {
+            
+
+            
+            let enemy = new PIXI.Sprite(texture);
+            enemy.anchor.set(0.5);
+            enemy.x = 700;
+            enemy.y = app.view.height / 2;
+            console.log("enemy" + enemy.x);
+
+            app.stage.addChild(enemy);
+            return enemy;
+
+        }
+
+        function fireBullet() {
+            console.log("click!");
+
+            let bullet = createBullet();
+            console.log(bullet);
+            bullets.push(bullet);
+
+        }
+
+        function gameLoop(delta) {
+            updateBg();
+            updateEnemy();
+            updateBullets(delta);
+
+            //keysDiv.innerHTML = JSON.stringify(keys);
+            // console.log(player);
+
+            if (keys["90"] == true) {
+                console.log("player");
+                player.y -= 5;
+            }
+
+
+
+            if (keys["83"] == true)
+                player.y += 5;
+
+            if (keys["68"] == true)
+                player.x += 5;
+
+            if (keys["81"] == true)
+                player.x -= 5;
+
+
+
+
+
+
+        }
+
+
+        function updateBullets(delta) {
+
+
+            for (let i = 0; i < bullets.length; i++) {
+
+                bullets[i].position.x += bullets[i].speed;
+                if(bullets[i].x > enemy.x && bullets[i].x < enemy.x +32 
+                && bullets[i].y > enemy.y && bullets[i].y < enemy.y +32 ){
+                    app.stage.removeChild(enemy);
+                }
+                console.log(bullets[i].speed);
+                if (bullets[i].position.x > 800) {
+                    bullets[i].dead = true;
+                }
+
+            }
+            for (let i = 0; i < bullets.length; i++) {
+                if (bullets[i].dead) {
+                    app.stage.removeChild(bullets[i]);
+                    bullets.splice(i, 1);
+                }
+            }
+        }
+
+        function updateBg() {
+            bgX = (bgX - bgSpeed);
+            bgFront.tilePosition.x = bgX;
+            bgMiddle.tilePosition.x = bgX / 2;
+            bgBack.tilePosition.x = bgX / 4;
+        }
+
+        function updateEnemy(){
+            if (enemy.y<0||enemy.y>600)
+                enemySpeed=-enemySpeed;
+            enemy.y+=enemySpeed;
+
+        }
+
+        function createBullet() {
+            let bullet = new PIXI.Sprite(app.loader.resources["bullet"].texture);
+            bullet.anchor.set(0.5);
+            bullet.x = player.x;
+            bullet.y = player.y;
+            bullet.speed = bulletSpeed;
+            app.stage.addChild(bullet);
+
+            return bullet;
+        }
+
+        /*
+        function movePlayer(e){
+            let pos = e.data.global;
+
+            player.x = pos.x;
+            player.y = pos.y;
+        }*/
+    </script>
+</head>
+
+<body>
+
+    <div id="gameDiv"></div>
+    <script src="" async defer></script>
+</body>
+
+</html>
