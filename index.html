@@ -1,5 +1,3 @@
-
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,6 +24,7 @@
         let bgX = 0;
         let bgSpeed = 1;
 
+        
         window.onload = function () {
             app = new PIXI.Application({
                 width: 800,
@@ -81,13 +80,7 @@
         }
 
 
-        function createBg(texture) {
-            let tiling = new PIXI.TilingSprite(texture ,800,600);
-            tiling.position.set(0, 0);
-            app.stage.addChild(tiling);
 
-            return tiling;
-        }
 
         function createPlayer(texture) {
             console.log("player");
@@ -104,29 +97,9 @@
 
         }
 
-        function createEnemy(texture) {
-            
 
-            
-            let enemy = new PIXI.Sprite(texture);
-            enemy.anchor.set(0.5);
-            enemy.x = 700;
-            enemy.y = app.view.height / 2;
-            console.log("enemy" + enemy.x);
 
-            app.stage.addChild(enemy);
-            return enemy;
 
-        }
-
-        function fireBullet() {
-            console.log("click!");
-
-            let bullet = createBullet();
-            console.log(bullet);
-            bullets.push(bullet);
-
-        }
 
         function gameLoop(delta) {
             updateBg();
@@ -160,14 +133,96 @@
         }
 
 
+
+
+
+        function createBg(texture) {
+            let tiling = new PIXI.TilingSprite(texture, 800, 600);
+            tiling.position.set(0, 0);
+            app.stage.addChild(tiling);
+
+            return tiling;
+        }
+
+        function updateBg() {
+            bgX = (bgX - bgSpeed);
+            bgFront.tilePosition.x = bgX;
+            bgMiddle.tilePosition.x = bgX / 2;
+            bgBack.tilePosition.x = bgX / 4;
+        }
+
+
+        class Enemy extends PIXI.Sprite {
+            constructor(x = 0, y = 0, texture, name = "none", hp = 100, speed = 5) {
+                super(texture);
+                this.anchor.set(0.5);
+                this.name = name;
+                this.hp = hp;
+                this.x = x;
+                this.y = y;
+                this.speed = speed;
+            }
+            status() {
+                return this.name + " has " + this.hp + "hit points";
+            }
+
+            move() {
+
+            }
+        }
+
+
+
+        function createEnemy(texture) {
+
+
+
+            let enemy = new PIXI.Sprite(texture);
+            enemy.anchor.set(0.5);
+            enemy.x = 700;
+            enemy.y = app.view.height / 2;
+            console.log("enemy" + enemy.x);
+
+            app.stage.addChild(enemy);
+            return enemy;
+
+        }
+
+        function updateEnemy() {
+            if (enemy.y < 0 || enemy.y > 600)
+                enemySpeed = -enemySpeed;
+            enemy.y += enemySpeed;
+
+        }
+
+        function createBullet() {
+            let bullet = new PIXI.Sprite(app.loader.resources["bullet"].texture);
+            bullet.anchor.set(0.5);
+            bullet.x = player.x;
+            bullet.y = player.y;
+            bullet.speed = bulletSpeed;
+            app.stage.addChild(bullet);
+
+            return bullet;
+        }
+
+        function fireBullet() {
+            console.log("click!");
+
+            let bullet = createBullet();
+            console.log(bullet);
+            bullets.push(bullet);
+
+        }
+
         function updateBullets(delta) {
 
 
             for (let i = 0; i < bullets.length; i++) {
 
                 bullets[i].position.x += bullets[i].speed;
-                if(bullets[i].x > enemy.x && bullets[i].x < enemy.x +32 
-                && bullets[i].y > enemy.y && bullets[i].y < enemy.y +32 ){
+                if (bullets[i].x > enemy.x && bullets[i].x < enemy.x + 32 &&
+                    bullets[i].y > enemy.y && bullets[i].y < enemy.y + 32) {
                     app.stage.removeChild(enemy);
                 }
                 console.log(bullets[i].speed);
@@ -182,31 +237,6 @@
                     bullets.splice(i, 1);
                 }
             }
-        }
-
-        function updateBg() {
-            bgX = (bgX - bgSpeed);
-            bgFront.tilePosition.x = bgX;
-            bgMiddle.tilePosition.x = bgX / 2;
-            bgBack.tilePosition.x = bgX / 4;
-        }
-
-        function updateEnemy(){
-            if (enemy.y<0||enemy.y>600)
-                enemySpeed=-enemySpeed;
-            enemy.y+=enemySpeed;
-
-        }
-
-        function createBullet() {
-            let bullet = new PIXI.Sprite(app.loader.resources["bullet"].texture);
-            bullet.anchor.set(0.5);
-            bullet.x = player.x;
-            bullet.y = player.y;
-            bullet.speed = bulletSpeed;
-            app.stage.addChild(bullet);
-
-            return bullet;
         }
 
         /*
