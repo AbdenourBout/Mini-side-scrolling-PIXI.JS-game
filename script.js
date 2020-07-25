@@ -146,6 +146,10 @@ let app;
                 if (bullets[i].x > enemy.x && bullets[i].x < enemy.x + 32 &&
                     bullets[i].y > enemy.y && bullets[i].y < enemy.y + 32) {
                     app.stage.removeChild(enemy);
+                    console.log("dead");
+                    
+                    //enemy= new Enemy(app.loader.resources["enemy"].texture);
+                    app.stage.addChild(enemy);
                 }
                 
                 if (bullets[i].x > 800) {
