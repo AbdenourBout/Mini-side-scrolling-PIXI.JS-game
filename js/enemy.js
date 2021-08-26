@@ -1,5 +1,5 @@
 export default class Enemy extends PIXI.Sprite {
-    constructor(texture,name = "none", hp = 100, speed = 5) {
+    constructor(texture,name = "none", hp = 100, speed = 1) {
         super(texture);
         this.anchor.set(0.5);
         this.name = name;

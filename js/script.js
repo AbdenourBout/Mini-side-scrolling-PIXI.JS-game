@@ -1,16 +1,20 @@
 import Player from "./player.js";
 import Enemy from "./enemy.js";
 import Bullet from "./bullet.js";
+import Hud from "./hud.js";
+import Ebullet from "./ebullet.js";
 let app;
 
         let bgBack;
         let bgFront;
         let bgMiddle;
+        let hud;
 
 
         let keys = {};
         
         let bullets = [];
+        let enemybullets = [];
         
         let player;
         let enemy;
@@ -62,10 +66,14 @@ let app;
             bgFront = createBg(app.loader.resources["bgFront"].texture);
             player = new Player(app.loader.resources["player"].texture);
             enemy = new Enemy(app.loader.resources["enemy"].texture);
+            hud = new Hud();
+            hud.addText();
             console.log( enemy);
             
             app.stage.addChild(enemy);
             app.stage.addChild(player);
+            app.stage.addChild(hud.scoretext);
+            app.stage.addChild(hud.healthtext);
             document.querySelector("#gameDiv ").addEventListener("pointerdown", ()=>{
                 let bul=new Bullet(app.loader.resources["bullet"].texture,player.x,player.y);
                 bullets.push(bul);
@@ -93,6 +101,7 @@ let app;
             updateBg();
             enemy.move();
             updateBullets(delta);
+            updateEnemybullets();
 
             //keysDiv.innerHTML = JSON.stringify(keys);
             // console.log(player);
@@ -146,9 +155,10 @@ let app;
                 if (bullets[i].x > enemy.x && bullets[i].x < enemy.x + 32 &&
                     bullets[i].y > enemy.y && bullets[i].y < enemy.y + 32) {
                     app.stage.removeChild(enemy);
+                    hud.updateScore();
                     console.log("dead");
                     
-                    //enemy= new Enemy(app.loader.resources["enemy"].texture);
+                    enemy= new Enemy(app.loader.resources["enemy"].texture);
                     app.stage.addChild(enemy);
                 }
                 
@@ -165,3 +175,48 @@ let app;
                 }
             }
         }
+
+
+        function updateEnemybullets(){
+            //console.log(enemybullets.length+" Esize");
+            if (enemy.y % 100 == 0 ){
+                let bul=new Ebullet(app.loader.resources["bullet"].texture,enemy.x,enemy.y);
+               // console.log("enemy bul"+ bul);
+                enemybullets.push(bul);
+                app.stage.addChild(bul);
+               // console.log(enemybullets);
+               // console.log(bul.x);
+
+
+            }
+
+            for (let i = 0; i < enemybullets.length; i++) {
+
+                enemybullets[i].move();
+
+                if (enemybullets[i].x > player.x && enemybullets[i].x < player.x + 32 &&
+                    enemybullets[i].y > player.y && enemybullets[i].y < player.y + 32) {
+                    
+                    hud.updateHealth();
+                    console.log("dead");
+                    
+                    
+                    
+                }
+
+                if (enemybullets[i].x < 0) {
+                    enemybullets[i].dead = true;
+                }
+            
+            
+            }
+
+            for (let i = enemybullets.length-1; i >= 0; i--) {
+                if (enemybullets[i].dead) {
+                    app.stage.removeChild(enemybullets[i]);
+                    enemybullets.splice(i, 1);
+                }
+            }
+
+        }
+
