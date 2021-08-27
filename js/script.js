@@ -3,6 +3,10 @@ import Enemy from "./enemy.js";
 import Bullet from "./bullet.js";
 import Hud from "./hud.js";
 import Ebullet from "./ebullet.js";
+
+PIXI.sound.add('my-sound', 'music.mp3');
+PIXI.sound.add('pew', 'pew.mp3');
+PIXI.sound.play('my-sound');
 let app;
 
         let bgBack;
@@ -53,6 +57,7 @@ let app;
             app.loader.onComplete.add(initLevel);
             app.loader.load();
 
+            
 
             // app.ticker.app(gameLoop);
 
@@ -77,6 +82,7 @@ let app;
             document.querySelector("#gameDiv ").addEventListener("pointerdown", ()=>{
                 let bul=new Bullet(app.loader.resources["bullet"].texture,player.x,player.y);
                 bullets.push(bul);
+                PIXI.sound.play('pew');
                 app.stage.addChild(bul);
                 console.log(bullets);
                 console.log(bul.x);
