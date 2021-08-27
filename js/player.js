@@ -1,7 +1,7 @@
 export default class Player extends PIXI.Sprite {
     constructor(x) {
         super(x);
-        this.anchor.set(0.5);
+        //this.anchor.set(0.5);
 
         this.x = 80;
         this.y = 600 / 2;

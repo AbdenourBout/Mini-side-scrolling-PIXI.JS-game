@@ -153,11 +153,11 @@ let app;
                 bullets[i].move();
 
                 if (bullets[i].x > enemy.x && bullets[i].x < enemy.x + 32 &&
-                    bullets[i].y > enemy.y && bullets[i].y < enemy.y + 32) {
+                    bullets[i].y +12 > enemy.y && bullets[i].y < enemy.y + 32) {
                     app.stage.removeChild(enemy);
                     hud.updateScore();
                     console.log("dead");
-                    
+                    bullets[i].dead = true;
                     enemy= new Enemy(app.loader.resources["enemy"].texture);
                     app.stage.addChild(enemy);
                 }
@@ -195,11 +195,11 @@ let app;
                 enemybullets[i].move();
 
                 if (enemybullets[i].x > player.x && enemybullets[i].x < player.x + 32 &&
-                    enemybullets[i].y > player.y && enemybullets[i].y < player.y + 32) {
+                    enemybullets[i].y + 12 > player.y && enemybullets[i].y < player.y + 32) {
                     
                     hud.updateHealth();
                     console.log("dead");
-                    
+                    enemybullets[i].dead = true;
                     
                     
                 }
