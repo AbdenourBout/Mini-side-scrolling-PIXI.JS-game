@@ -1,8 +1,8 @@
 # Mini-side-scrolling-PIXI.JS-game
-Messing arround with PIXI.JS :smile:
+Messing arround with PIXI.JS
 
 ## What is it? 
-Just a ship that PEW PEW the enemies :sweat_smile: 
+Just a ship that PEW PEW the enemies  
 
 ## TODO (in no particular order)
 - [x] Player moves.
