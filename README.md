@@ -10,8 +10,8 @@ Just a ship that PEW PEW the enemies
 - [x] Enemies gets deleted when hit by bullet.
 - [ ] Add Game Menu.
 - [ ] Add Health bars.
-- [ ] Enhance collision detection.
-- [ ] Add Sounds.
+- [x] Enhance collision detection.
+- [x] Add Sounds.
 - [ ] get better Sprites.
 - [ ] Bullets different types of trajectory. 
 - [ ] Boosts.
